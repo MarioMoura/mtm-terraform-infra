@@ -12,7 +12,7 @@
 
 # aws-cli config
 provider "aws" {
-  region     = "us-west-2"
+  region  = "us-west-2"
 }
 
 # ec2.metaltoad.net Route 53 Hosted zone
@@ -24,77 +24,77 @@ resource "aws_route53_zone" "ec2" {
 
 #==================== VPN01 ================================
 resource "aws_instance" "vpn01" {
-  ami              = "ami-0b7237d6459a73a69"
-  subnet_id        = "subnet-0c7c142262a36a911"
-  instance_type    = "t2.medium"
+  ami                     = "ami-0b7237d6459a73a69"
+  subnet_id               = "subnet-0c7c142262a36a911"
+  instance_type           = "t2.medium"
   #source_dest_check = false
-  tags             = {
-        "Backup"   = ""
-        "Name"     = "vpn01-mtm"
+  tags                    = {
+        "Backup"          = ""
+        "Name"            = "vpn01-mtm"
   }
   lifecycle {
-    ignore_changes = [user_data,user_data_replace_on_change]
+    ignore_changes        = [user_data,user_data_replace_on_change]
   }
 }
 #==================== Mgt02 ================================
 resource "aws_instance" "mgt02" {
-  ami            = "ami-e699f3d6"
-  subnet_id      = "subnet-208b7f57"
-  instance_type  = "m3.large"
-  source_dest_check = false
-  tags                                 = {
-    "Backup"             = ""
-    "Client"             = "mtm-int"
-    "Name"               = "mgt02-mtm"
-    "SystemManager"      = "ManagedServices"
-    "cloudfix:finderIds" = "InstallSSMAgentLinuxMac"
-    "project"            = "test"
+  ami                     = "ami-e699f3d6"
+  subnet_id               = "subnet-208b7f57"
+  instance_type           = "t2.medium"
+  source_dest_check       = false
+  tags                    = {
+    "Backup"              = ""
+    "Client"              = "mtm-int"
+    "Name"                = "mgt02-mtm"
+    "SystemManager"       = "ManagedServices"
+    "cloudfix:finderIds"  = "InstallSSMAgentLinuxMac"
+    "project"             = "test"
   }
-  user_data = "mgt02-mtm"
+  user_data               = "mgt02-mtm"
 }
 #==================== Mgt03 ================================
 resource "aws_instance" "mgt03" {
-  ami            = "ami-05336235"
-  subnet_id      = "subnet-208b7f57"
-  instance_type  = "t2.medium"
-  tags = {
+  ami                     = "ami-05336235"
+  subnet_id               = "subnet-208b7f57"
+  instance_type           = "t2.medium"
+  tags                    = {
      "Backup"             = ""
      "Client"             = "mtm-int"
      "Name"               = "mgt03-mtm"
      "SystemManager"      = "ManagedServices"
      "cloudfix:finderIds" = "InstallSSMAgentLinuxMac"
   }
-  user_data = "hostname=mgt03-mtm"
+  user_data               = "hostname=mgt03-mtm"
 }
 #==================== Mgt04 ================================
 resource "aws_instance" "mgt04" {
-  ami            = "ami-03e737ff90d808f02"
-  subnet_id      = "subnet-208b7f57"
-  instance_type  = "m4.large"
-  tags = {
-    "Backup"             = ""
-    "Name"               = "mgt04-mtm"
-    "SystemManager"      = "ManagedServices"
-    "cloudfix:finderIds" = "InstallSSMAgentLinuxMac"
+  ami                     = "ami-03e737ff90d808f02"
+  subnet_id               = "subnet-208b7f57"
+  instance_type           = "m4.large"
+  tags                    = {
+    "Backup"              = ""
+    "Name"                = "mgt04-mtm"
+    "SystemManager"       = "ManagedServices"
+    "cloudfix:finderIds"  = "InstallSSMAgentLinuxMac"
   }
-  user_data = ""
+  user_data               = ""
 }
 #==================== Mgt05 ================================
 resource "aws_instance" "mgt05" {
-  ami            = "ami-0c09c7eb16d3e8e70"
-  subnet_id      = "subnet-208b7f57"
-  instance_type  = "m3.large"
-  tags = { Name  = "mgt05-mtm"
+  ami                     = "ami-0c09c7eb16d3e8e70"
+  subnet_id               = "subnet-208b7f57"
+  instance_type           = "m3.large"
+  tags                    = { Name  = "mgt05-mtm"
      "cloudfix:finderIds" = "InstallSSMAgentLinuxMac"
   }
-  user_data = ""
+  user_data               = ""
 }
 resource "aws_route53_record" "mgt05_dns" {
-  zone_id = aws_route53_zone.ec2.zone_id
-  name    = "mgt05-mtm.${aws_route53_zone.ec2.name}"
-  type    = "CNAME"
-  ttl     = "300"
-  records = ["${aws_instance.mgt05.public_dns}"]
+  zone_id                 = aws_route53_zone.ec2.zone_id
+  name                    = "mgt05-mtm.${aws_route53_zone.ec2.name}"
+  type                    = "CNAME"
+  ttl                     = "300"
+  records                 = ["${aws_instance.mgt05.public_dns}"]
 }
 
 #==================== Mgt06 ================================
