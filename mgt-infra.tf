@@ -40,7 +40,7 @@ resource "aws_instance" "vpn01" {
 resource "aws_instance" "mgt02" {
   ami                     = "ami-e699f3d6"
   subnet_id               = "subnet-208b7f57"
-  instance_type           = "t2.medium"
+  instance_type           = "m3.large"
   source_dest_check       = false
   tags                    = {
     "Backup"              = ""
@@ -80,6 +80,10 @@ resource "aws_instance" "mgt04" {
   user_data               = ""
 }
 #==================== Mgt05 ================================
+resource "aws_key_pair" "mtm-mgt05" {
+  key_name   = "mtm-mgt05"
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCRDED9sl0qkx+ORUK7PAIhLX0e0hK6SRJhTz3u6zqSbFbNsAeffyxPF1CxIN09eRjW1s1o3yuiS5xmhq69FD7gmyr6T3tB+k+4pQMcDitgSw4+Ov1KaFTQAnLpAyUCSEMCPNDabpfTMYUH8mjhLRVaNSwynsmK03Ompxtel53QP2ujgYbMmXowYvTn2tNn2nXOjw5EcvFTjbUHoww94q9gw4EQ9nqCbRMs4YjXHZzrfj1Ycl767l9lRNGFb79gmEF/sGpCqQMvhNqpxElhG1357TXUpCNl+TVCTGdsanGWcpIh0qfIVzqh9dKy03eBHX0mPvPsQA/mmvP2zY2qD79X"
+}
 resource "aws_instance" "mgt05" {
   ami                     = "ami-0c09c7eb16d3e8e70"
   subnet_id               = "subnet-208b7f57"
@@ -88,6 +92,11 @@ resource "aws_instance" "mgt05" {
      "cloudfix:finderIds" = "InstallSSMAgentLinuxMac"
   }
   user_data               = ""
+  associate_public_ip_address = "true"
+  vpc_security_group_ids      = [ "sg-0ce61f4196acd2274",
+    "sg-1971f07c",
+    "sg-02168c73f3f67b0d6",]
+  key_name                    = "mtm-mgt05"
 }
 resource "aws_route53_record" "mgt05_dns" {
   zone_id                 = aws_route53_zone.ec2.zone_id
