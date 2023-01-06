@@ -13,6 +13,7 @@
 # aws-cli config
 provider "aws" {
   region  = "us-west-2"
+  profile = "mtm"
 }
 
 # ec2.metaltoad.net Route 53 Hosted zone
@@ -97,6 +98,11 @@ resource "aws_instance" "mgt05" {
     "sg-1971f07c",
     "sg-02168c73f3f67b0d6",]
   key_name                    = "mtm-mgt05"
+  root_block_device {
+    tags = {
+      "Name" = "mgt05-mtm"
+    }
+  }
 }
 resource "aws_route53_record" "mgt05_dns" {
   zone_id                 = aws_route53_zone.ec2.zone_id
@@ -123,6 +129,11 @@ resource "aws_instance" "mgt06" {
   }
   associate_public_ip_address = "true"
   user_data = ""
+  root_block_device {
+    tags = {
+      "Name" = "mgt06-mtm"
+    }
+  }
 }
 resource "aws_route53_record" "mgt06_dns" {
   zone_id = aws_route53_zone.ec2.zone_id
